@@ -12,11 +12,16 @@ fs.writeFile(
 
 stdout.write('Введите текст, который нужно добавить в файл:')
 stdin.on('data', data => {
-  fs.appendFile(
-    path.join(__dirname, 'text.txt'),
-    data.toString(),
-    err => {
-      if (err) throw err
+    if(data.toString().trim() === 'exit') {
+      process.exit()
     }
-  )
+   
+    fs.appendFile(
+      path.join(__dirname, 'text.txt'),
+      data.toString(),
+      err => {
+        if (err) throw err
+      }
+      )
+  // }
 })
