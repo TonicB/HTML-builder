@@ -3,8 +3,7 @@ const fs = require('fs')
 const path = require('path')
 
 fs.writeFile(
-  path.join(__dirname, 'text.txt'),
-  '',
+  path.join(__dirname, 'text.txt'), '',
   (err) => {
     if (err) throw err;
     // console.log('Файл был создан');
@@ -18,7 +17,7 @@ stdin.on('data', data => {
    
     fs.appendFile(
       path.join(__dirname, 'text.txt'),
-      data.toString(),
+      data.toString().trim(),
       err => {
         if (err) throw err
       }
