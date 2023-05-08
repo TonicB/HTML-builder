@@ -9,7 +9,7 @@ fs.writeFile(
     // console.log('Файл был создан');
 })
 
-stdout.write('Input some text:')
+stdout.write('Input some text:\n')
 stdin.on('data', data => {
     if(data.toString().trim() === 'exit') {
       console.log('Bye')

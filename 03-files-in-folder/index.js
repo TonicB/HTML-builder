@@ -50,12 +50,16 @@ const path = require('path');
 
 // By async/await
 (async function printFileInfo () {
-  const filesList = await fsPromises.readdir(path.join(__dirname, 'secret-folder'), {withFileTypes: true}, (err) => {if(err) throw err})
-  filesList.filter( file => file.isFile())
-  .forEach(file => fs.stat(
-      path.join(__dirname,'secret-folder', file.name),
-      (err, stat) => {
-        if (!err) console.log(`${file.name.split('.')[0]}   ${path.extname(file.name)}  ${stat.size} kb`)
-      }
-    ))
+  try {
+
+    const filesList = await fsPromises.readdir(path.join(__dirname, 'secret-folder'), {withFileTypes: true})
+    for (const file of filesList.filter( file => file.isFile())) {
+      const stat = await fsPromises.stat(path.join(__dirname,'secret-folder', file.name))
+      const size = stat.size/1024
+      console.log(`${file.name.split('.')[0]} - ${path.extname(file.name).slice(1)} - ${size.toFixed(3)} kb`)
+    }
+  } catch (e) {
+    console.error(e)
+    process.exit(1)
+  }
 })()

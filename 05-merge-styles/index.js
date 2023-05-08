@@ -47,15 +47,20 @@ const path = require('path');
 
 // By async/await
 (async () => {
-  const styles = await fsPromises.readdir(path.join(__dirname, 'styles'), {withFileTypes: true})
-  const stylesCssFiles = styles.filter(f => f.isFile() && path.extname(f.name) === '.css').map(f => f.name)
-  let bundleContent
+  try {
 
-  for (const f of stylesCssFiles) {
-    const contentFromFile = await fsPromises.readFile(path.join(__dirname, 'styles', f), {encoding: 'utf8'})
-    bundleContent = bundleContent + contentFromFile
+    const styles = await fsPromises.readdir(path.join(__dirname, 'styles'), {withFileTypes: true})
+    const stylesCssFiles = styles.filter(f => f.isFile() && path.extname(f.name) === '.css').map(f => f.name)
+    let bundleContent = ''
+    
+    for (const f of stylesCssFiles) {
+      const contentFromFile = await fsPromises.readFile(path.join(__dirname, 'styles', f), {encoding: 'utf8'})
+      bundleContent += contentFromFile
+    }
+    
+    await fsPromises.writeFile(path.join(__dirname, 'project-dist', 'bundle.css'), bundleContent)
+  } catch (e) {
+    console.error(e)
   }
-
-  await fsPromises.writeFile(path.join(__dirname, 'project-dist', 'bundle.css'), bundleContent)
 })()
 
